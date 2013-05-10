@@ -113,9 +113,10 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
                     gi.craftingRequest(new ItemStack(Id, howMany, 0));
                     break;
                 case 3:
-                    int targetId = (int) Math.round((Double) arguments[0]);
+                    String alarmName = (String) arguments[0];
+                    int targetId = (int) Math.round((Double) arguments[1]);
                     IAEItemStack target = Util.createItemStack(new ItemStack(targetId,0,0));
-                       Alarm alarm = new Alarm(1,10,target,computer); 
+                       Alarm alarm = new Alarm(alarmName,1,10,target,computer); 
                        this.targets.add(alarm);
                     break;
             }
@@ -237,7 +238,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
     @Override
     public void onNetworkInventoryChange(IItemList iss) {
-        // TODO Auto-generated method stub
+      
         FMLLog.log(Level.INFO, "AEPeripheral networkchanged called");
         for(Alarm a: targets)
         {
@@ -261,17 +262,19 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
         private int min;
         private int max;
         private IAEItemStack target;
-          protected Alarm(int min, int max,IAEItemStack target,IComputerAccess computer)
+        private String alarmName;
+          protected Alarm(String alarmname,int min, int max,IAEItemStack target,IComputerAccess computer)
           {
               this.computer = computer;
               this.min = min;
               this.max = max;
               this.target = target;
+              this.alarmName = alarmname;
           }
           
           protected void Fire(long level)
           {
-              this.computer.queueEvent("AELevel", new Object[] {level});
+              this.computer.queueEvent(this.alarmName, new Object[] {level});
           }
           
           public IAEItemStack getTarget()

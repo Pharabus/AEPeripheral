@@ -14,72 +14,71 @@ import com.google.common.collect.Multimap;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 
-public class AEPeripheralTickHandler 
-implements ITickHandler {
+public class AEPeripheralTickHandler implements ITickHandler {
 
-	  private static Multimap tilesForInit = LinkedHashMultimap.create();
-	  
-	  int howofften = 0;
+    private static Multimap<World, TileEntityAEPeripheral> tilesForInit = LinkedHashMultimap.create();
 
-	  @ForgeSubscribe
-	  public synchronized void worldUnload(WorldEvent.Unload w)
-	  {
-	    tilesForInit.removeAll(w.world);
-	  }
+    int howofften = 0;
 
-	  public synchronized void TriggerInit(TileEntityAEPeripheral te)
-	  {
-	    tilesForInit.put(te.worldObj, te);
-	  }
-	  
-	@Override
-	public synchronized void tickStart(EnumSet<TickType> type, Object... tickData) {
-		if (this.howofften++ % 900 == 0)
-	    {
-	     // AppEng.log(new StringBuilder().append("NBT Cache: ").append(Platform.isClient() ? "CLIENT" : "SERVER").append(" = ").append(Platform.sharedTagLoad()).toString());
-	    }
+    @ForgeSubscribe
+    public synchronized void worldUnload(WorldEvent.Unload w) {
+        tilesForInit.removeAll(w.world);
+    }
 
-	    if (type.contains(TickType.WORLD))
-	    {
-	      World w = (World)tickData[0];
+    public synchronized void TriggerInit(TileEntityAEPeripheral te) {
+        tilesForInit.put(te.worldObj, te);
+    }
 
-	      List<TileEntityAEPeripheral> ateJ = new LinkedList<TileEntityAEPeripheral>();
-	      ateJ.addAll(tilesForInit.get(w));
-	      tilesForInit.get(w).clear();
+    @Override
+    public synchronized void tickStart(EnumSet<TickType> type,
+            Object... tickData) {
+        if (howofften++ % 900 == 0) {
+            // AppEng.log(new
+            // StringBuilder().append("NBT Cache: ").append(Platform.isClient()
+            // ? "CLIENT" :
+            // "SERVER").append(" = ").append(Platform.sharedTagLoad()).toString());
+        }
 
-	      for (TileEntityAEPeripheral ate : ateJ)
-	        ate.init();
-	    }
-	    else if (type.contains(TickType.CLIENT))
-	    {
-	      World w = aeperipheral.proxy.getClientWorld();
+        if (type.contains(TickType.WORLD)) {
+            World w = (World) tickData[0];
 
-	      List<TileEntityAEPeripheral> ateJ = new LinkedList<TileEntityAEPeripheral>();
-	      ateJ.addAll(tilesForInit.get(w));
-	      tilesForInit.get(w).clear();
+            List<TileEntityAEPeripheral> ateJ = new LinkedList<TileEntityAEPeripheral>();
+            ateJ.addAll(tilesForInit.get(w));
+            tilesForInit.get(w).clear();
 
-	      for (TileEntityAEPeripheral ate : ateJ)
-	        ate.init();
-	    }
-		
-	}
+            for (TileEntityAEPeripheral ate : ateJ) {
+                ate.init();
+            }
+        } else if (type.contains(TickType.CLIENT)) {
+            World w = aeperipheral.proxy.getClientWorld();
 
-	@Override
-	public void tickEnd(EnumSet<TickType> type, Object... tickData) {
-		// TODO Auto-generated method stub
-		
-	}
+            List<TileEntityAEPeripheral> ateJ = new LinkedList<TileEntityAEPeripheral>();
+            ateJ.addAll(tilesForInit.get(w));
+            tilesForInit.get(w).clear();
 
-	@Override
-	public EnumSet<TickType> ticks() {
-		// TODO Auto-generated method stub
-		 return EnumSet.of(TickType.WORLD, TickType.CLIENT);
-	}
+            for (TileEntityAEPeripheral ate : ateJ) {
+                ate.init();
+            }
+        }
 
-	@Override
-	public String getLabel() {
-		// TODO Auto-generated method stub
-		return "AEPEripheral TE Initialization";
-	}
+    }
+
+    @Override
+    public void tickEnd(EnumSet<TickType> type, Object... tickData) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public EnumSet<TickType> ticks() {
+      
+        return EnumSet.of(TickType.WORLD, TickType.CLIENT);
+    }
+
+    @Override
+    public String getLabel() {
+     
+        return "AEPEripheral TE Initialization";
+    }
 
 }

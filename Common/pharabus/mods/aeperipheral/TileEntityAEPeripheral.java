@@ -1,14 +1,8 @@
 package pharabus.mods.aeperipheral;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
-
-import pharabus.mods.aeperipheral.TileEntityAEPeripheral.Alarm;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;

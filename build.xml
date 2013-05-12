@@ -7,7 +7,9 @@
 	 Pharabus
      ====================================================================== -->
 <project name="AEPeripheral" default="build">
-  <description>Iron Chest</description>
+  <description>AEPeripheral</description>
+
+  
   <target name="writeversion" depends="buildenvsetup">
     <exec executable="${python.exe}" dir="${basedir}" failonerror="true">
       <arg value="${basedir}/getversion.py" />
@@ -26,6 +28,8 @@
     <property environment="env" />
     <property file="build.properties" />
     <property name="modname" value="aeperipheral" />
+	<property name="ccapi" value=''C:/Dev/api/Computercraft/api/src" />
+	<property name="aeapi" value=''C:/Dev/api/appeng/src"/>
     <condition property="mcp.home" value="${env.WORKSPACE}/mcp/forge/mcp" else="${default.mcp.home}">
       <isset property="env.WORKSPACE" />
     </condition>
@@ -80,6 +84,12 @@
   <target name="merge" depends="init">
     <copy todir="${client.mcp.srcdir}" overwrite="true" verbose="true">
       <fileset dir="${common.src.dir}" includes="**/*.java" />
+    </copy>
+	 <copy todir="${client.mcp.srcdir}" overwrite="true" verbose="true">
+		<fileset dir="${ccapi}" includes="**/*.java" />
+    </copy>
+	 <copy todir="${client.mcp.srcdir}" overwrite="true" verbose="true">
+       <fileset dir="${aeapi}" includes="**/*.java" />
     </copy>
   </target>
 

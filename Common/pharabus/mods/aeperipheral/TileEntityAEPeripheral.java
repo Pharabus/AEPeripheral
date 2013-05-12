@@ -108,15 +108,21 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
                     {
                         throw new Exception("bad arguments, expected numbers");
                     }
-                    int Id = (int) Math.round((Double) arguments[0]);
-                    int howMany = (int) Math.round((Double) arguments[1]);
+                    int Id = (int) Math.floor((Double) arguments[0]);
+                    int howMany = (int) Math.floor((Double) arguments[1]);
                     gi.craftingRequest(new ItemStack(Id, howMany, 0));
                     break;
                 case 3:
+                    if(arguments.length < 4)
+                    {
+                        throw new Exception("Not enough arguments");
+                    }
                     String alarmName = (String) arguments[0];
-                    int targetId = (int) Math.round((Double) arguments[1]);
+                    int targetId = (int) Math.floor((Double) arguments[1]);
+                    int min = (int) Math.floor((Double) arguments[2]);
+                    int max = (int) Math.floor((Double) arguments[3]);
                     IAEItemStack target = Util.createItemStack(new ItemStack(targetId,0,0));
-                       Alarm alarm = new Alarm(alarmName,1,10,target,computer); 
+                       Alarm alarm = new Alarm(alarmName,min,max,target,computer); 
                        this.targets.add(alarm);
                     break;
             }

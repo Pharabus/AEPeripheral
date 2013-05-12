@@ -2,9 +2,13 @@ package pharabus.mods.aeperipheral;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
+
+import pharabus.mods.aeperipheral.TileEntityAEPeripheral.Alarm;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -31,7 +35,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
     private IGridInterface myGrid;
     public int gIdx = 0;
     protected boolean isLoaded = false;
-    private List<Alarm> targets = new ArrayList<Alarm>();
+    private Map<String,Alarm> targets = new HashMap<String,Alarm>();
 
     @Override
     public void validate() {
@@ -123,7 +127,10 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
                     int max = (int) Math.floor((Double) arguments[3]);
                     IAEItemStack target = Util.createItemStack(new ItemStack(targetId,0,0));
                        Alarm alarm = new Alarm(alarmName,min,max,target,computer); 
-                       this.targets.add(alarm);
+
+                       this.targets.remove(alarmName);
+                       this.targets.put(alarmName,alarm);
+                       
                     break;
             }
 
@@ -246,16 +253,36 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
     public void onNetworkInventoryChange(IItemList iss) {
       
         FMLLog.log(Level.INFO, "AEPeripheral networkchanged called");
-        for(Alarm a: targets)
+      
+        for(Alarm value : targets.values())
         {
-            IAEItemStack out = iss.findItem(a.getTarget());
+           
+            IAEItemStack out = iss.findItem(value.getTarget());
             if(out != null)
             {
                 long level = out.getStackSize();
-                if(level > a.getMin() && (a.getMax() >0 && level < a.getMax()))
+                if(value.getMin() == 0)
                 {
-                    a.Fire(level);
+                    if(level >= value.getMax())
+                    {
+                        value.Fire(level);
+                    }
                 }
+                else if(value.getMax() == 0)
+                {
+                    if(level <= value.getMin())
+                    {
+                        value.Fire(level);
+                    } 
+                }
+                else
+                {
+                    if(level >= value.getMin() && level <= value.getMax())
+                    {
+                        value.Fire(level);
+                    }
+                }
+                
             }
         }
             

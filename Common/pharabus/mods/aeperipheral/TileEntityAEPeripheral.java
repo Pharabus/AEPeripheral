@@ -70,7 +70,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
     public Object[] callMethod(IComputerAccess computer, int method,
             Object[] arguments) throws Exception {
 
-        Map<String, Number> ret = new HashMap<String, Number>();
+        Map<String, String> ret = new HashMap<String, String>();
         if (!hasPower)
             return new Object[] { "No Power" };
         if (myGrid == null)
@@ -86,7 +86,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
                     list = ginv.getAvailableItems();
                     for (IAEItemStack item : list) {
                         ret.put(item.getItemStack().getDisplayName(),
-                                item.getStackSize());
+                                Long.toString(item.getStackSize()));
                     }
                     break;
                 case 1:
@@ -94,7 +94,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
                     list = ginv.getAvailableItems();
                     for (IAEItemStack item : list) {
                         ret.put(item.getItemStack().getDisplayName(),
-                                item.getItemID());
+                                item.getItemID() + ":" + item.getItemDamage());
                     }
                     break;
                 case 2:
@@ -106,9 +106,11 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
                     {
                         throw new Exception("bad arguments, expected numbers");
                     }
-                    int Id = (int) Math.floor((Double) arguments[0]);
+                    String[] item = arguments[0].toString().split(":");
+                    int Id = Integer.parseInt(item[0]);
+                    int damage = Integer.parseInt(item[1]);
                     int howMany = (int) Math.floor((Double) arguments[1]);
-                    gi.craftingRequest(new ItemStack(Id, howMany, 0));
+                    gi.craftingRequest(new ItemStack(Id, howMany, damage));
                     break;
                 case 3:
                     if(arguments.length < 4)

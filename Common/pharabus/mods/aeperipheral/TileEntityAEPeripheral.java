@@ -118,7 +118,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
                         throw new Exception("Not enough arguments");
                     }
                     String alarmName = (String) arguments[0];
-                    String[] targetitem = arguments[0].toString().split(":");
+                    String[] targetitem = arguments[1].toString().split(":");
                     int targetId = Integer.parseInt(targetitem[0]);
                     int targetDamage = Integer.parseInt(targetitem[1]);
                   

@@ -118,10 +118,14 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
                         throw new Exception("Not enough arguments");
                     }
                     String alarmName = (String) arguments[0];
-                    int targetId = (int) Math.floor((Double) arguments[1]);
+                    String[] targetitem = arguments[0].toString().split(":");
+                    int targetId = Integer.parseInt(targetitem[0]);
+                    int targetDamage = Integer.parseInt(targetitem[1]);
+                  
+                    
                     int min = (int) Math.floor((Double) arguments[2]);
                     int max = (int) Math.floor((Double) arguments[3]);
-                    IAEItemStack target = Util.createItemStack(new ItemStack(targetId,0,0));
+                    IAEItemStack target = Util.createItemStack(new ItemStack(targetId,0,targetDamage));
                        Alarm alarm = new Alarm(alarmName,min,max,target,computer); 
 
                        this.targets.remove(alarmName);

@@ -102,7 +102,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
                     {
                         throw new Exception("Not enough arguments");
                     }
-                    if(!(arguments[0] instanceof Double) || !(arguments[1] instanceof Double))
+                    if(!(arguments[0] instanceof String) || !(arguments[1] instanceof Double))
                     {
                         throw new Exception("bad arguments, expected numbers");
                     }

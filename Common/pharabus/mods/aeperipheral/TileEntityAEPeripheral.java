@@ -169,8 +169,6 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
     @Override
     public void setPowerStatus(boolean _hasPower) {
-        FMLLog.log(Level.INFO,
-                "AEPeripheral setPowerStatus called _hasPower is" + _hasPower);
         if (hasPower != _hasPower) {
             hasPower = _hasPower;
             markForUpdate();
@@ -186,8 +184,6 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
     @Override
     public IGridInterface getGrid() {
-        FMLLog.log(Level.INFO, "AEPeripheral getGrid called my grid is"
-                + myGrid.isValid());
         return myGrid.isValid() ? myGrid : null;
     }
 
@@ -251,8 +247,6 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
     @Override
     public void onNetworkInventoryChange(IItemList iss) {
-      
-        FMLLog.log(Level.INFO, "AEPeripheral networkchanged called");
       
         for(Alarm value : targets.values())
         {

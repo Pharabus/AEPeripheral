@@ -13,7 +13,7 @@ public class Version {
         major = "1";
         minor = "0";
         rev = "0";
-        build = "0";
+        build = "3";
 
     }
 

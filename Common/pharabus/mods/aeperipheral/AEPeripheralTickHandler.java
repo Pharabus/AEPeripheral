@@ -32,12 +32,6 @@ public class AEPeripheralTickHandler implements ITickHandler {
     @Override
     public synchronized void tickStart(EnumSet<TickType> type,
             Object... tickData) {
-        if (howofften++ % 900 == 0) {
-            // AppEng.log(new
-            // StringBuilder().append("NBT Cache: ").append(Platform.isClient()
-            // ? "CLIENT" :
-            // "SERVER").append(" = ").append(Platform.sharedTagLoad()).toString());
-        }
 
         if (type.contains(TickType.WORLD)) {
             World w = (World) tickData[0];

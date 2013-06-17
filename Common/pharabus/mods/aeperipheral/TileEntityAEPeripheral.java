@@ -189,7 +189,6 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
     @Override
     public void setGrid(IGridInterface gi) {
-        FMLLog.log(Level.INFO, "AEPeripheral setGrid called");
         if (gi != myGrid) {
             myGrid = gi;
 

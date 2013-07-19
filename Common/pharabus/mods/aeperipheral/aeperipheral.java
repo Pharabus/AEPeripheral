@@ -11,10 +11,8 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import appeng.api.Blocks;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PostInit;
-import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -25,7 +23,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid = "AEPeripheral", name = "Appled Energistics Peripheral", dependencies = "required-after:Forge@[7.0,);required-after:FML@[5.0.5,);required-after:AppliedEnergistics;required-after:ComputerCraft")
+@Mod(modid = "AEPeripheral", name = "Appled Energistics Peripheral", dependencies = "required-after:Forge@[9.10,);required-after:FML@[6.2,);required-after:AppliedEnergistics;required-after:ComputerCraft")
 @NetworkMod(versionBounds = "[1.0,)", clientSideRequired = true, serverSideRequired = true)
 public class aeperipheral {
 
@@ -36,16 +34,14 @@ public class aeperipheral {
     @SidedProxy(clientSide = "pharabus.mods.aeperipheral.client.ClientProxy", serverSide = "pharabus.mods.aeperipheral.CommonProxy")
     public static CommonProxy proxy;
 
-    @Instance
+    @Instance("AEPeripheral")
     public static aeperipheral instance;
 
     private int blockId;
 
-    public aeperipheral() {
-        instance = this;
-    }
+   
 
-    @PreInit
+   @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         Version.init(event.getVersionProperties());
         event.getModMetadata().version = Version.fullVersionString();
@@ -64,7 +60,7 @@ public class aeperipheral {
         }
     }
 
-    @Init
+   @EventHandler
     public void load(FMLInitializationEvent evt) {
         AEPeripheralblock = new BlockAEPeripheral(blockId);
         GameRegistry.registerBlock(AEPeripheralblock,
@@ -93,7 +89,7 @@ public class aeperipheral {
         GameRegistry.addRecipe(oreRecipe);
     }
 
-    @PostInit
+   @EventHandler
     public void modsLoaded(FMLPostInitializationEvent evt) {
     }
 

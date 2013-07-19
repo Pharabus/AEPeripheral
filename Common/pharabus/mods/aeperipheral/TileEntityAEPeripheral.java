@@ -2,8 +2,6 @@ package pharabus.mods.aeperipheral;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -18,8 +16,8 @@ import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.IStorageAware;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventory;
-import cpw.mods.fml.common.FMLLog;
 import dan200.computer.api.IComputerAccess;
+import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
 
 public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
@@ -65,11 +63,10 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
         return new String[] { "GetInventory", "GetCraftables", "Craft","AddAlert" };
     }
-
+    
     @Override
-    public Object[] callMethod(IComputerAccess computer, int method,
-            Object[] arguments) throws Exception {
-
+    public Object[] callMethod(IComputerAccess computer, ILuaContext context,
+            int method, Object[] arguments) throws Exception {
         Map<String, String> ret = new HashMap<String, String>();
         if (!hasPower)
             return new Object[] { "No Power" };
@@ -318,4 +315,6 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
               return this.max;
           }
     }
+
+   
 }

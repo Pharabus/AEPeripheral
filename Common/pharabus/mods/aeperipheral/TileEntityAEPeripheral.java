@@ -209,10 +209,8 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
     public void markForUpdate() {
         if (AEPeripheralUtil.isClient()) {
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        } else {
-            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-        }
+            worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+        } 
     }
 
     @Override
@@ -243,7 +241,8 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
     @Override
     public void onNetworkInventoryChange(IItemList iss) {
-      
+      if(AEPeripheralUtil.isServer())
+      {
         for(Alarm value : targets.values())
         {
            
@@ -275,7 +274,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
                 
             }
         }
-            
+      }    
        
     }
     

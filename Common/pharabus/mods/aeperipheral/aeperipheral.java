@@ -37,7 +37,7 @@ public class aeperipheral {
     @Instance("AEPeripheral")
     public static aeperipheral instance;
 
-    private int blockId;
+   
 
    
 
@@ -50,7 +50,10 @@ public class aeperipheral {
 
         try {
             cfg.load();
-            blockId = cfg.getBlock("AEPeripheral", 976).getInt(976);
+            int blockId = cfg.getBlock("AEPeripheral", 976).getInt(976); 
+            AEPeripheralblock = new BlockAEPeripheral(blockId);
+        GameRegistry.registerBlock(AEPeripheralblock,
+                "AEPeripheral.BlockAEPeripheral");
 
         } catch (Exception e) {
             FMLLog.log(Level.SEVERE, e,
@@ -62,9 +65,7 @@ public class aeperipheral {
 
    @EventHandler
     public void load(FMLInitializationEvent evt) {
-        AEPeripheralblock = new BlockAEPeripheral(blockId);
-        GameRegistry.registerBlock(AEPeripheralblock,
-                "AEPeripheral.BlockAEPeripheral");
+       
         LanguageRegistry.instance().addNameForObject(AEPeripheralblock,
                 "en_US", "AE Peripheral");
         GameRegistry.registerTileEntity(TileEntityAEPeripheral.class,

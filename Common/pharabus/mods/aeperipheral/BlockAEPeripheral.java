@@ -44,7 +44,7 @@ public class BlockAEPeripheral extends BlockContainer {
 
         for (String s : sideNames) {
             icons[i++] = par1IconRegister.registerIcon(String.format(
-                    "AEPeripheral:AEPEripheralBlock_%s", s));
+                    "aeperipheral:AEPEripheralBlock_%s", s));
         }
     }
 

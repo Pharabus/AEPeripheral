@@ -16,7 +16,7 @@ public class BlockAEPeripheral extends BlockContainer {
         super(id, Material.iron);
         setUnlocalizedName("AEPeripheral");
         setHardness(3.0F);
-        setCreativeTab(CreativeTabs.tabDecorations);
+        setCreativeTab(CreativeTabs.tabBlock);
         // TODO Auto-generated constructor stub
     }
 

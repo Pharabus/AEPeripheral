@@ -4,8 +4,11 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -18,6 +21,35 @@ public class BlockAEPeripheral extends BlockContainer {
         setHardness(3.0F);
         setCreativeTab(CreativeTabs.tabBlock);
         // TODO Auto-generated constructor stub
+    }
+    
+    @Override
+    public void onBlockPlacedBy(World world, int i, int j, int k, EntityLivingBase entityliving, ItemStack itemStack)
+    {
+        byte chestFacing = 0;
+        int facing = MathHelper.floor_double((double) ((entityliving.rotationYaw * 4F) / 360F) + 0.5D) & 3;
+        if (facing == 0)
+        {
+            chestFacing = 2;
+        }
+        if (facing == 1)
+        {
+            chestFacing = 5;
+        }
+        if (facing == 2)
+        {
+            chestFacing = 3;
+        }
+        if (facing == 3)
+        {
+            chestFacing = 4;
+        }
+        TileEntity te = world.getBlockTileEntity(i, j, k);
+        if (te != null && te instanceof TileEntityAEPeripheral)
+        {
+            ((TileEntityAEPeripheral) te).setFacing(chestFacing);
+            world.markBlockForUpdate(i, j, k);
+        }
     }
 
     @Override

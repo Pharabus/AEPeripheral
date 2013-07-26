@@ -2,9 +2,12 @@ package pharabus.mods.aeperipheral;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
@@ -12,6 +15,8 @@ import appeng.api.Util;
 import appeng.api.WorldCoord;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
+import appeng.api.me.tiles.IColoredMETile;
+import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.IStorageAware;
 import appeng.api.me.util.IGridInterface;
@@ -21,14 +26,16 @@ import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
 
 public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
-        IGridMachine, IStorageAware {
+        IGridMachine, IStorageAware, IDirectionalMETile {
     private boolean isValidFlag = true;
     public boolean hasPower = false;
     private IGridInterface myGrid;
     public int gIdx = 0;
     protected boolean isLoaded = false;
     private Map<String,Alarm> targets = new HashMap<String,Alarm>();
-
+    private byte facing;
+    
+    
     @Override
     public void validate() {
         super.validate();
@@ -133,6 +140,11 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
         }
         return new Object[] { ret };
+    }
+    
+    public void setFacing(byte chestFacing)
+    {
+        this.facing = chestFacing;
     }
 
     @Override
@@ -278,6 +290,30 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
        
     }
     
+    @Override
+    public boolean canConnect(ForgeDirection dir) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+    
+    
+    @Override
+    public void readFromNBT(NBTTagCompound nbttagcompound)
+    {
+        super.readFromNBT(nbttagcompound);
+     
+        this.facing = nbttagcompound.getByte("facing");
+
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound nbttagcompound)
+    {
+        super.writeToNBT(nbttagcompound);
+ 
+        nbttagcompound.setByte("facing", this.facing);
+    }
+    
     private class Alarm
     {
         private IComputerAccess computer;
@@ -315,5 +351,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
           }
     }
 
+   
+  
    
 }

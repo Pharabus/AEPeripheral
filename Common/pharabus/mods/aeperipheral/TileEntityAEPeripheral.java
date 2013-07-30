@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -15,7 +14,6 @@ import appeng.api.Util;
 import appeng.api.WorldCoord;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
-import appeng.api.me.tiles.IColoredMETile;
 import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.IStorageAware;
@@ -27,13 +25,11 @@ import dan200.computer.api.IPeripheral;
 
 public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
         IGridMachine, IStorageAware, IDirectionalMETile {
-    private boolean isValidFlag = true;
+  
     public boolean hasPower = false;
     private IGridInterface myGrid;
-    public int gIdx = 0;
     protected boolean isLoaded = false;
     private Map<String,Alarm> targets = new HashMap<String,Alarm>();
-    private byte facing;
     
     
     @Override
@@ -142,10 +138,6 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
         return new Object[] { ret };
     }
     
-    public void setFacing(byte chestFacing)
-    {
-        this.facing = chestFacing;
-    }
 
     @Override
     public boolean canAttachToSide(int side) {
@@ -173,16 +165,21 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
     @Override
     public boolean isValid() {
         // TODO Auto-generated method stub
-        return isValidFlag;
+        return this.isPowered() && 
+                this.myGrid != null 
+                && this.myGrid.isValid();
     }
 
     @Override
     public void setPowerStatus(boolean _hasPower) {
-        if (hasPower != _hasPower) {
-            hasPower = _hasPower;
-            markForUpdate();
+        if((AEPeripheralUtil.isServer()))
+        {
+            if (hasPower != _hasPower) {
+                hasPower = _hasPower;
+               
+            }  
         }
-
+        markForUpdate();
     }
 
     @Override
@@ -198,19 +195,18 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
     @Override
     public void setGrid(IGridInterface gi) {
-        if (gi != myGrid) {
-            myGrid = gi;
-
-            if (gi != null) {
-                gIdx = gi.getGridIndex();
-            } else {
-                gIdx = 0;
+        if((AEPeripheralUtil.isServer()))
+        {
+            if (gi != myGrid) {
+                myGrid = gi;
+    
+                if (myGrid == null) {
+                    setPowerStatus(false);
+                }
+             
             }
-            if (myGrid == null) {
-                setPowerStatus(false);
-            }
-            markForUpdate();
-        }
+        }   
+        markForUpdate();
     }
 
     @Override
@@ -223,6 +219,16 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
         if (AEPeripheralUtil.isClient()) {
             worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
         } 
+        else
+        {
+            int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+            int facing = meta / 2;
+            
+            int disabled = this.isValid() ? 0 : 1;
+            
+            int newMeta = facing * 2 + disabled;      
+            worldObj.setBlockMetadataWithNotify(xCoord,yCoord,zCoord,newMeta,2);
+        }
     }
 
     @Override
@@ -296,23 +302,6 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
         return false;
     }
     
-    
-    @Override
-    public void readFromNBT(NBTTagCompound nbttagcompound)
-    {
-        super.readFromNBT(nbttagcompound);
-     
-        this.facing = nbttagcompound.getByte("facing");
-
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound nbttagcompound)
-    {
-        super.writeToNBT(nbttagcompound);
- 
-        nbttagcompound.setByte("facing", this.facing);
-    }
     
     private class Alarm
     {

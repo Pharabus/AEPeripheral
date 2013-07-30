@@ -26,30 +26,28 @@ public class BlockAEPeripheral extends BlockContainer {
     @Override
     public void onBlockPlacedBy(World world, int i, int j, int k, EntityLivingBase entityliving, ItemStack itemStack)
     {
-        byte chestFacing = 0;
+           
         int facing = MathHelper.floor_double((double) ((entityliving.rotationYaw * 4F) / 360F) + 0.5D) & 3;
+        
         if (facing == 0)
         {
-            chestFacing = 2;
+            world.setBlockMetadataWithNotify(i, j, k, 4, 2);
         }
+
         if (facing == 1)
         {
-            chestFacing = 5;
+            world.setBlockMetadataWithNotify(i, j, k, 10, 2);
         }
+
         if (facing == 2)
         {
-            chestFacing = 3;
+            world.setBlockMetadataWithNotify(i, j, k, 6, 2);
         }
+
         if (facing == 3)
         {
-            chestFacing = 4;
-        }
-        TileEntity te = world.getBlockTileEntity(i, j, k);
-        if (te != null && te instanceof TileEntityAEPeripheral)
-        {
-            ((TileEntityAEPeripheral) te).setFacing(chestFacing);
-            world.markBlockForUpdate(i, j, k);
-        }
+            world.setBlockMetadataWithNotify(i, j, k, 8, 2);
+        }    
     }
 
     @Override
@@ -59,6 +57,12 @@ public class BlockAEPeripheral extends BlockContainer {
         return te;
     }
 
+    @SideOnly(Side.CLIENT)
+    private boolean IsActive(int meta)
+    {
+        return meta % 2 == 1;
+    }
+    
     @Override
     public TileEntity createNewTileEntity(World world) {
         // TODO Auto-generated method stub
@@ -66,28 +70,43 @@ public class BlockAEPeripheral extends BlockContainer {
     }
 
     @SideOnly(Side.CLIENT)
-    private Icon[] icons;
+    private Icon IconTop;
+    @SideOnly(Side.CLIENT)
+    private Icon IconFront;
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Icon getIcon(int i, int j)
+    {
+        if(i == 1 || i == 0)
+        {
+            return this.IconTop;
+        }
+        else if(i != j /2)
+        {
+            return this.blockIcon;
+        }
+        else
+        {
+            if(this.IsActive(j))
+            {
+                return this.IconFront;//change to enabled icon
+            }
+            else
+            {
+                return this.IconFront;
+            }
+        }      
+    }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister par1IconRegister) {
-        icons = new Icon[3];
-        int i = 0;
-
-        for (String s : sideNames) {
-            icons[i++] = par1IconRegister.registerIcon(String.format(
-                    "aeperipheral:AEPEripheralBlock_%s", s));
+           this.blockIcon = par1IconRegister.registerIcon( "aeperipheral:AEPEripheralBlock_side");
+           this.IconTop = par1IconRegister.registerIcon( "aeperipheral:AEPEripheralBlock_top");
+           this.IconFront = par1IconRegister.registerIcon( "aeperipheral:AEPEripheralBlock_front");
         }
-    }
+  }
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public Icon getIcon(int i, int j) {
+  
 
-        return icons[sideMapping[i]];
-    }
-
-    private static String[] sideNames = { "top", "front", "side" };
-    private static int[] sideMapping = { 0, 0, 2, 1, 2, 2, 2 };
-
-}

@@ -84,11 +84,17 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
                 case 0:
                     ginv = gi.getCellArray();
                     list = ginv.getAvailableItems();
+                    Map<String,Map<String,String>> z = new HashMap<String,Map<String,String>>();
                     for (IAEItemStack item : list) {
                         ret.put(item.getItemStack().getDisplayName(),
                                 Long.toString(item.getStackSize()));
+                        
+                        Map<String,String> data = new HashMap<String,String>();
+                        data.put(item.getItemStack().getDisplayName(),  Long.toString(item.getStackSize()));
+                        z.put(item.getItemID() + ":" + item.getItemDamage(), data);
                     }
-                    break;
+                    return new Object[] { z };
+                   //break;
                 case 1:
                     ginv = gi.getCraftableArray();
                     list = ginv.getAvailableItems();

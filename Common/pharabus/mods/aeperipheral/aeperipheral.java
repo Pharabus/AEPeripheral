@@ -86,7 +86,7 @@ public class aeperipheral {
         ShapedOreRecipe oreRecipe = new ShapedOreRecipe(new ItemStack(
                 AEPeripheralblock),
                 new Object[] { "AAA", "BCA", "AAA", 'A', Block.stone, 'B',
-                        Blocks.blkColorlessCable, 'C', Item.redstone });
+                        Blocks.blkColorlessCable.copy(), 'C', Item.redstone });
         GameRegistry.addRecipe(oreRecipe);
     }
 

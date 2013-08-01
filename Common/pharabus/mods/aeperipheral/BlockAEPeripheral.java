@@ -73,6 +73,8 @@ public class BlockAEPeripheral extends BlockContainer {
     private Icon IconTop;
     @SideOnly(Side.CLIENT)
     private Icon IconFront;
+    @SideOnly(Side.CLIENT)
+    private Icon IconFrontEnabled;
 
     @Override
     @SideOnly(Side.CLIENT)
@@ -90,7 +92,7 @@ public class BlockAEPeripheral extends BlockContainer {
         {
             if(this.IsActive(j))
             {
-                return this.IconFront;//change to enabled icon
+                return this.IconFrontEnabled;
             }
             else
             {
@@ -105,6 +107,7 @@ public class BlockAEPeripheral extends BlockContainer {
            this.blockIcon = par1IconRegister.registerIcon( "aeperipheral:AEPEripheralBlock_side");
            this.IconTop = par1IconRegister.registerIcon( "aeperipheral:AEPEripheralBlock_top");
            this.IconFront = par1IconRegister.registerIcon( "aeperipheral:AEPEripheralBlock_front");
+           this.IconFrontEnabled = par1IconRegister.registerIcon( "aeperipheral:AEPEripheralBlock_frontEnabled");
         }
   }
 

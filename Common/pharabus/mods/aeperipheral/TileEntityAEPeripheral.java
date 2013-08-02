@@ -146,8 +146,9 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
     
 
     @Override
-    public boolean canAttachToSide(int side) {
-        return true;
+    public boolean canAttachToSide(int side) {        
+        int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+        return side != meta /2;
     }
 
     @Override
@@ -178,13 +179,10 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
     @Override
     public void setPowerStatus(boolean _hasPower) {
-        if((AEPeripheralUtil.isServer()))
-        {
             if (hasPower != _hasPower) {
                 hasPower = _hasPower;
                
             }  
-        }
         markForUpdate();
     }
 
@@ -201,8 +199,6 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
     @Override
     public void setGrid(IGridInterface gi) {
-        if((AEPeripheralUtil.isServer()))
-        {
             if (gi != myGrid) {
                 myGrid = gi;
     
@@ -211,7 +207,6 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
                 }
              
             }
-        }   
         markForUpdate();
     }
 
@@ -305,7 +300,8 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
     @Override
     public boolean canConnect(ForgeDirection dir) {
         // TODO Auto-generated method stub
-        return false;
+        int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+        return dir.flag != meta /2;
     }
     
     

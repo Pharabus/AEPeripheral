@@ -301,7 +301,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
     public boolean canConnect(ForgeDirection dir) {
         // TODO Auto-generated method stub
         int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-        return dir.flag != meta /2;
+        return dir.ordinal() != ForgeDirection.getOrientation(meta /2).ordinal();
     }
     
     

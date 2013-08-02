@@ -230,6 +230,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
             int newMeta = facing * 2 + disabled;      
             worldObj.setBlockMetadataWithNotify(xCoord,yCoord,zCoord,newMeta,2);
         }
+        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
     }
 
     @Override
@@ -260,8 +261,6 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
     @Override
     public void onNetworkInventoryChange(IItemList iss) {
-      if(AEPeripheralUtil.isServer())
-      {
         for(Alarm value : targets.values())
         {
            
@@ -293,8 +292,6 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
                 
             }
         }
-      }    
-       
     }
     
     @Override

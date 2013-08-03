@@ -230,7 +230,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
             int newMeta = facing * 2 + disabled;      
             worldObj.setBlockMetadataWithNotify(xCoord,yCoord,zCoord,newMeta,2);
         }
-        this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+
     }
 
     @Override
@@ -247,10 +247,13 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
         MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent(this, worldObj,
                 getLocation()));
-
+       
         worldObj.updateAllLightTypes(xCoord, yCoord, zCoord);
+        worldObj.notifyBlockOfNeighborChange(xCoord, yCoord, zCoord, aeperipheral.AEPeripheralblock.blockID);
     }
 
+
+            
     protected void terminate() {
         isLoaded = false;
         setGrid(null);

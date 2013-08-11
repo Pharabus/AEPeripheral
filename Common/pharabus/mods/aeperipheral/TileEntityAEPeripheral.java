@@ -165,6 +165,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
     @Override
     public boolean isValid() {
+      //TODO fix this as it is causing the block update issue
         return true;
     }
 
@@ -212,7 +213,9 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
             int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
             int facing = meta / 2;
             
-            int active = this.isValid() ? 1 : 0;
+            int active = this.isPowered() && 
+                    this.myGrid != null 
+                    && this.myGrid.isValid() ? 1 : 0;
             
             int newMeta = facing * 2 + active;      
             worldObj.setBlockMetadataWithNotify(xCoord,yCoord,zCoord,newMeta,2);

@@ -6,16 +6,13 @@ import java.util.Map;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
 import appeng.api.Util;
 import appeng.api.WorldCoord;
-import appeng.api.events.GridTileConnectivityEvent;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
-import appeng.api.me.tiles.IDirectionalMETile;
 import appeng.api.me.tiles.IGridMachine;
 import appeng.api.me.tiles.IStorageAware;
 import appeng.api.me.util.IGridInterface;
@@ -25,7 +22,7 @@ import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
 
 public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
-        IGridMachine, IStorageAware, IDirectionalMETile {
+        IGridMachine, IStorageAware {
   
     public boolean hasPower = false;
     private IGridInterface myGrid;
@@ -35,21 +32,20 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
     
     @Override
     public void validate() {
-        super.validate();
-
+      
+       super.validate();
         if (!isLoaded) {
             if (AEPeripheralUtil.isClient()) {
                 aeperipheral.AEPeripheralGenericTick_client.TriggerInit(this);
             } else {
                 aeperipheral.AEPeripheralGenericTick_server.TriggerInit(this);
-            }
+           }
         }
     }
 
     @Override
     public void invalidate() {
-        super.invalidate();
-
+       super.invalidate();
         if (isLoaded) {
             isLoaded = false;
             terminate();
@@ -143,8 +139,10 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
     @Override
     public boolean canAttachToSide(int side) {        
-        int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-        return side != meta /2;
+      //  int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+     //   return side != meta /2;
+        
+        return true;
     }
 
     @Override
@@ -167,10 +165,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
     @Override
     public boolean isValid() {
-        // TODO Auto-generated method stub
-        return this.isPowered() && 
-                this.myGrid != null 
-                && this.myGrid.isValid();
+        return true;
     }
 
     @Override
@@ -222,7 +217,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
             int newMeta = facing * 2 + active;      
             worldObj.setBlockMetadataWithNotify(xCoord,yCoord,zCoord,newMeta,2);
         }
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+      //  worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     @Override
@@ -240,11 +235,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
         MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent(this, worldObj,
                 getLocation()));
 
-        MinecraftForge.EVENT_BUS.post(new GridTileConnectivityEvent(this, worldObj,
-                getLocation()));
-        
-        
-        worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.worldObj.getBlockId(xCoord,yCoord,zCoord));
+       // worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.worldObj.getBlockId(xCoord,yCoord,zCoord));
  
     }
 
@@ -293,13 +284,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
         }
     }
     
-    @Override
-    public boolean canConnect(ForgeDirection dir) {
-        // TODO Auto-generated method stub
-        int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-        return dir.ordinal() != ForgeDirection.getOrientation(meta /2).ordinal();
-    }
-    
+   
     
     private class Alarm
     {

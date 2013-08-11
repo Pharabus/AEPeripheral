@@ -12,6 +12,7 @@ import appeng.api.IAEItemStack;
 import appeng.api.IItemList;
 import appeng.api.Util;
 import appeng.api.WorldCoord;
+import appeng.api.events.GridTileConnectivityEvent;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.IDirectionalMETile;
@@ -70,6 +71,7 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
     @Override
     public Object[] callMethod(IComputerAccess computer, ILuaContext context,
             int method, Object[] arguments) throws Exception {
+      
         Map<String, String> ret = new HashMap<String, String>();
         if (!hasPower)
             return new Object[] { "No Power" };
@@ -217,20 +219,16 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
     }
 
     public void markForUpdate() {
-        if (AEPeripheralUtil.isClient()) {
-            worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
-        } 
-        else
-        {
+        if (AEPeripheralUtil.isServer()) {
             int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
             int facing = meta / 2;
             
-            int disabled = this.isValid() ? 0 : 1;
+            int active = this.isValid() ? 1 : 0;
             
-            int newMeta = facing * 2 + disabled;      
+            int newMeta = facing * 2 + active;      
             worldObj.setBlockMetadataWithNotify(xCoord,yCoord,zCoord,newMeta,2);
         }
-
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     @Override
@@ -247,9 +245,13 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
         MinecraftForge.EVENT_BUS.post(new GridTileLoadEvent(this, worldObj,
                 getLocation()));
-       
-        worldObj.updateAllLightTypes(xCoord, yCoord, zCoord);
-        worldObj.notifyBlockOfNeighborChange(xCoord, yCoord, zCoord, aeperipheral.AEPeripheralblock.blockID);
+
+        MinecraftForge.EVENT_BUS.post(new GridTileConnectivityEvent(this, worldObj,
+                getLocation()));
+        
+        
+        worldObj.notifyBlocksOfNeighborChange(xCoord, yCoord, zCoord, this.worldObj.getBlockId(xCoord,yCoord,zCoord));
+ 
     }
 
 

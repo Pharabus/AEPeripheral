@@ -14,19 +14,21 @@ import appeng.api.WorldCoord;
 import appeng.api.events.GridTileLoadEvent;
 import appeng.api.events.GridTileUnloadEvent;
 import appeng.api.me.tiles.IGridMachine;
-import appeng.api.me.tiles.IStorageAware;
 import appeng.api.me.util.IGridInterface;
 import appeng.api.me.util.IMEInventory;
+import appeng.api.networkevents.MENetworkEventSubscribe;
+import appeng.api.networkevents.MENetworkStorageEvent;
 import dan200.computer.api.IComputerAccess;
 import dan200.computer.api.ILuaContext;
 import dan200.computer.api.IPeripheral;
 
 public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
-        IGridMachine, IStorageAware {
+        IGridMachine {
   
     public boolean hasPower = false;
     private IGridInterface myGrid;
     protected boolean isLoaded = false;
+    protected boolean networkReady = false;
     private Map<String,Alarm> targets = new HashMap<String,Alarm>();
     
     
@@ -252,8 +254,13 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
 
     }
 
-    @Override
-    public void onNetworkInventoryChange(IItemList iss) {
+    @MENetworkEventSubscribe
+    public void NetworkStorageChanged(MENetworkStorageEvent e)
+    {
+        onNetworkInventoryChange(e.currentItems);
+    }
+    
+    private void onNetworkInventoryChange(IItemList iss) {
         for(Alarm value : targets.values())
         {
            
@@ -324,6 +331,22 @@ public class TileEntityAEPeripheral extends TileEntity implements IPeripheral,
           {
               return this.max;
           }
+    }
+
+
+
+    @Override
+    public boolean isMachineActive() {
+        // TODO Auto-generated method stub
+        return this.isPowered() && this.networkReady;
+    }
+
+    @Override
+    public void setNetworkReady(boolean isReady) {
+        if (this.networkReady != isReady)
+        {
+          this.networkReady = isReady;
+        }
     }
 
    
